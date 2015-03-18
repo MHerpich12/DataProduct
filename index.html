@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pitch For Data Product</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Pitch For Data Product">
+  <meta name="author" content="Herpich">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Pitch For Data Product</h1>
+    <h2>Estimating Prevalence of Esophageal Cancer</h2>
+    <p>Herpich<br/></p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Motivation</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>Esophageal cancer is the eighth most common cancer globally, with nearly 450,000 net cases per year and 400,000 deaths per year</p></li>
+<li><p>The most common causes of esophageal cancer, both of ESCC and EAC, include smoking, alcohol, obesity, and poor diet</p></li>
+<li><p>Age seems to play a significant impact, as only 15% of cases are found in people younger than 55</p></li>
+<li><p>R contains a data frame in the datasets package based on a French case-control study for adults with esophageal cancer in Ille-et-Vilaine</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Data</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>The esophageal cancer dataset has over 1,100 individual datapoints, both Cases and Controls, which are subcategorized by age group and level of alcohol and tobacco consumption</li>
+</ul>
+
+<pre><code>## [1] 25-34 35-44 45-54 55-64 65-74 75+  
+## Levels: 25-34 &lt; 35-44 &lt; 45-54 &lt; 55-64 &lt; 65-74 &lt; 75+
+</code></pre>
+
+<pre><code>## [1] 0-39g/day 40-79     80-119    120+     
+## Levels: 0-39g/day &lt; 40-79 &lt; 80-119 &lt; 120+
+</code></pre>
+
+<pre><code>## [1] 0-9g/day 10-19    20-29    30+     
+## Levels: 0-9g/day &lt; 10-19 &lt; 20-29 &lt; 30+
+</code></pre>
+
+<pre><code class="r">sum(esoph$ncontrols) + sum(esoph$ncases)
+</code></pre>
+
+<pre><code>## [1] 1175
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class#id" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Model</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>To create a forecasting tool for esophageal cancer prevalance among sub-populations, the data was split into training and test sets, and the training data provided the input for a generalized linear model using 3-fold cross validation</p></li>
+<li><p>The predictor variables for this test are the interaction between age and alcohol and age and tobacco as factor variables</p></li>
+<li><p>The interaction between tobacco and alcohol proved not statistically significant beyond the original model</p></li>
+<li><p>The estimated out-of-sample average MSE was 2% (200 basis points)</p></li>
+</ul>
+
+<pre><code>##                   Estimate  Std. Error   t value     Pr(&gt;|t|)
+## (Intercept)   -0.040607504 0.024179005 -1.679453 9.711733e-02
+## `agegp:alcgp`  0.023008633 0.002362668  9.738409 4.570201e-15
+## `agegp:tobgp`  0.007825381 0.002521258  3.103760 2.672567e-03
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class#id" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Prediction Tool</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><p>Using the linear model, age, alcohol consumption, and tobacco use can be inputted as factor variables, and the outcome will estimate approximate prevalence of Cases within the population sub-group</p></li>
+<li><p>Given the data, age, alcohol and tobacco use are all positive indicators for prevalence of esophageal cancer</p></li>
+<li><p>The tool shows the actual data in barchart form so the user can see the relative variation between actual and predicted outcomes</p></li>
+<li><p>It should be noted that the data is fairly incomplete, with varying numbers of people in each sub-group and often very few observations (especially in higher age groups); Additionally, it is not clear how biased the population sample is relative to the population as a whole or if there are any confounding variables altering the result, especially since typical case-control studies are self reported by subject</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class#id" id="slide-5" style="background:;">
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Motivation'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Data'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Model'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Prediction Tool'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title=''>
+         5
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
